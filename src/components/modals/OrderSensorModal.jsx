@@ -35,11 +35,11 @@ export default function OrderSensorModal({ isOpen, onClose, onOrder }) {
     const getSensorImage = () => {
         switch (sensorType) {
             case 'temperature':
-                return './assets/temperature-sensor.webp';
+                return './assets/sensor_temperature.webp';
             case 'ammonia':
-                return './assets/ammonia_sensor.jpg';
+                return './assets/sensor_ammonia.webp';
             case 'ammonia & temperature':
-                return './assets/both.png';
+                return './assets/sensor_both.webp';
             default:
                 return '/images/sensor_placeholder.png';
         }
