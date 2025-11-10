@@ -2,9 +2,9 @@ import React, { useState, useEffect } from 'react';
 import Navbar_home from '../components/layout/NavbarHome';
 import DataTable from '../components/layout/dataTable';
 import Footer from '../components/layout/Footer';
-import cloud from '../../public/assets/cloud-icon.png';
-import sensor from '../../public/assets/sensor-icon.png';
-import analysis from '../../public/assets/analysis-icon.png';
+import cloud from '../../public/assets/icon_cloud.webp';
+import sensor from '../../public/assets/icon_sensor.webp';
+import analysis from '../../public/assets/icon_analysis.webp';
 import styles from '../styles/LandingPage.module.css';
 
 /**
@@ -14,9 +14,9 @@ function LandingPage() {
   const [activeSection, setActiveSection] = useState('');
 
   const galleryImages = [
-    '/assets/demo_1.jpg',
-    '/assets/demo_2.jpg',
-    '/assets/demo_3.jpg',
+    '/assets/gallery001.webp',
+    '/assets/gallery002.webp',
+    '/assets/gallery003.webp',
   ];
 
   const navLinks = [

@@ -173,7 +173,7 @@ export class PaymentGatewayModal extends Component {
                                             Paypal
                                         </div>
                                         <div className={styles.right}>
-                                            <img src={'/assets/paypal.webp'} alt="paypal" className={styles.cardIcon} />
+                                            <img src={'/assets/logo_paypal.webp'} alt="paypal" className={styles.cardIcon} />
                                         </div>
                                     </div>
 
@@ -191,8 +191,8 @@ export class PaymentGatewayModal extends Component {
                                             Credit/Debit
                                         </div>
                                         <div className={styles.right}>
-                                            <img src={'/assets/credit-card-1.png'} alt="visa" className={styles.cardIcon} />
-                                            <img src={'/assets/credit-card-2.png'} alt="mastercard" className={styles.cardIcon} />
+                                            <img src={'/assets/logo_visa.webp'} alt="visa" className={styles.cardIcon} />
+                                            <img src={'/assets/logo_mastercard.webp'} alt="mastercard" className={styles.cardIcon} />
                                         </div>
                                     </div>
 
