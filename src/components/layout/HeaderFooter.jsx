@@ -120,7 +120,7 @@ export function Footer() {
                     <p className={styles.contact}>Contact us: <a href="mailto:PEMSSupport@gmail.com">PEMSSupport@gmail.com</a></p>
                     <div className={styles.socialLinks}>
                         <a 
-                            href="https://github.com/PEMS-project/PEMS" 
+                            href="https://github.com/MercadoSY/pems-web" 
                             target="_blank" 
                             rel="noopener noreferrer" 
                             className={styles.socialLink}
