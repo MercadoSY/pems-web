@@ -1,0 +1,81 @@
+/* src/components/modals/AlertAnalysisModal.module.css */
+.modalHeader {
+    background-color: #a91e2c; /* Dark Red */
+    color: white;
+    border-bottom: none;
+}
+
+.modalHeader .modal-title {
+    font-weight: 600;
+}
+
+.modalHeader .btn-close {
+    filter: invert(1) grayscale(100%) brightness(200%);
+}
+
+.modalBody {
+    background-color: #f4f7f9;
+    padding: 2rem;
+}
+
+.analysisCard {
+    background-color: #ffffff;
+    border-radius: 8px;
+    padding: 1.5rem;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+    border: 1px solid #e9ecef;
+}
+
+.cardTitle {
+    font-weight: 700;
+    font-size: 1.2rem;
+    color: #495057;
+    margin-bottom: 1.2rem;
+    padding-bottom: 0.75rem;
+    border-bottom: 2px solid #e9ecef;
+    display: flex;
+    align-items: center;
+}
+
+.cardTitle i {
+    font-size: 1.5rem;
+    color: #0d6efd;
+}
+
+.prescriptiveCard .cardTitle i {
+    color: #ffc107; /* Warning Yellow */
+}
+
+
+.insightList,
+.recommendationList {
+    list-style: none;
+    padding-left: 0;
+}
+
+.insightList li {
+    position: relative;
+    padding-left: 28px;
+    margin-bottom: 0.8rem;
+    color: #495057;
+}
+
+.insightList li::before {
+    font-family: 'bootstrap-icons';
+    content: '\f287'; /* check-circle */
+    position: absolute;
+    left: 0;
+    top: 2px;
+    font-weight: bold;
+    color: #0d6efd;
+}
+
+.recommendationList li {
+    padding: 0.75rem 1rem;
+    margin-bottom: 0.5rem;
+    background-color: #fff8e1; /* Light Yellow */
+    border-left: 4px solid #ffc107; /* Warning Yellow */
+    border-radius: 4px;
+    color: #6d4c41; /* Brownish text for better contrast */
+    font-weight: 500;
+}

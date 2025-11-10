@@ -1,0 +1,351 @@
+.navbar {
+    background-color: #008c2f;
+    height: 90px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    font-size: 1.2rem;
+    z-index: 999;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    transition: all 0.3s ease-in-out;
+    font-family: 'Poppins', sans-serif;
+    overflow: hidden; /* Ensures pseudo-element stays contained */
+}
+
+/* --- Positioning --- */
+.sticky {
+    position: sticky;
+    top: 0;
+}
+
+.absolute {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+}
+
+.navbar.withPattern::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-image: url('/assets/background_pattern.svg');
+    background-size: cover;
+    background-position: center;
+    background-repeat: no-repeat;
+    opacity: 0.4;
+    z-index: 0;
+}
+
+.navbarContainer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    height: 90px;
+    width: 100%;
+    max-width: 1400px;
+    padding: 0 50px;
+    position: relative;
+    z-index: 1;
+}
+
+/* --- Logo & Title --- */
+.logoContainer {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    text-decoration: none;
+    z-index: 1;
+}
+
+.logo {
+    height: 65px;
+    filter: drop-shadow(0 2px 2px rgba(0, 0, 0, 0.2));
+}
+
+.title {
+    font-size: 2.5rem;
+    color: #ffffff;
+    font-weight: 700;
+    margin: 0;
+}
+
+.dotcolor {
+    color: #ffcc00;
+}
+
+/* --- Desktop Navigation --- */
+.menuIcon {
+    display: none;
+}
+
+.navMenu {
+    display: flex;
+    align-items: center;
+}
+
+.navMenuItems {
+    display: flex;
+    align-items: center;
+    list-style: none;
+    padding: 0;
+    margin: 0;
+    gap: 0.5rem;
+}
+
+.navItem {
+    height: 90px;
+    display: flex;
+    align-items: center;
+}
+
+.navLink {
+    color: #e2fde2;
+    background: none;
+    border: none;
+    padding: 0.5rem 1rem;
+    font-size: 1rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: color 0.3s ease;
+}
+
+.navLink span {
+    position: relative;
+    padding-bottom: 5px;
+}
+
+.navLink span::after {
+    content: '';
+    position: absolute;
+    bottom: -8px;
+    left: 0;
+    right: 0;
+    height: 3px;
+    background-color: #ffcc00;
+    transform: scaleX(0);
+    transition: transform 0.3s ease;
+}
+
+.navLink:hover span {
+    color: #fff;
+}
+
+.navLink:hover span::after, 
+.navLink .activeLink::after {
+    transform: scaleX(1);
+}
+
+.navLink .activeLink {
+    color: #fff;
+}
+
+/* --- Auth Buttons --- */
+.navButtonsDesktop {
+    margin-left: 1rem;
+}
+
+.button {
+    padding: 10px 24px;
+    border-radius: 50px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+    border: 2px solid transparent;
+    outline: none;
+    white-space: nowrap;
+}
+
+.loginButton {
+    background-color: transparent;
+    color: #fff;
+    border-color: #fff;
+}
+
+.loginButton:hover:not(.active) {
+    background-color: #fff;
+    color: #008c2f;
+    transform: translateY(-2px);
+}
+
+.loginButton.active {
+    background-color: #fff;
+    color: #008c2f;
+    font-weight: 700;
+}
+
+.loginButton.active:hover {
+    background-color: #f0f0f0;
+    transform: translateY(-2px);
+}
+
+.registerButton {
+    background-color: transparent;
+    color: #fff;
+    border-color: #ffcc00;
+}
+
+.registerButton:hover:not(.active) {
+    background-color: #ffcc00;
+    color: #202020;
+    font-weight: 700;
+    transform: translateY(-2px);
+}
+
+.registerButton.active {
+    background-color: #ffcc00;
+    color: #202020;
+    font-weight: 700;
+}
+
+.registerButton.active:hover {
+    background-color: #ffdb4d;
+    border-color: #ffdb4d;
+    transform: translateY(-2px);
+}
+
+.navButtonsMobile {
+    display: none;
+}
+
+/* --- Mobile Responsiveness --- */
+@media screen and (max-width: 1050px) {
+    .navbar {
+        height: 80px;
+    }
+    .navbarContainer {
+        height: 80px;
+    }
+    .logo {
+        height: 60px;
+    }
+    .logoContainer {
+        position: relative;
+        z-index: 1000;
+    }
+
+    .navMenu {
+        display: flex;
+        flex-direction: column;
+        justify-content: flex-start;
+        width: 100%;
+        height: calc(100vh - 80px);
+        position: fixed;
+        top: 80px;
+        left: -100%;
+        opacity: 0;
+        transition: all 0.5s ease;
+        background-color: #008c2f;
+        padding: 2rem 0;
+        overflow-y: auto;
+    }
+
+    .navbar.withPattern .navMenu::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-image: url('/assets/background_pattern.svg');
+        background-size: cover;
+        background-position: center;
+        background-repeat: no-repeat;
+        opacity: 0.1;
+        z-index: 0;
+    }
+
+    .navMenu.active {
+        left: 0;
+        opacity: 1;
+        z-index: 998;
+    }
+
+    .navMenuItems {
+        flex-direction: column;
+        align-items: center;
+        gap: 1.5rem;
+        position: relative;
+        z-index: 1;
+        width: 100%;
+    }
+    
+    .navItem {
+        height: auto;
+        width: 100%;
+        text-align: center;
+    }
+    
+    .navLink {
+        font-size: 1.5rem;
+        padding: 1rem;
+        display: block;
+        width: 100%;
+    }
+
+    .navLink span::after {
+        bottom: -5px;
+    }
+
+    .navButtonsDesktop {
+        display: none;
+    }
+
+    .menuIcon {
+        display: block;
+        font-size: 1.8rem;
+        color: #fff;
+        cursor: pointer;
+        position: relative;
+        z-index: 1000;
+    }
+
+    .navButtonsMobile {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        width: 100%;
+        padding: 2rem;
+        margin-top: 1.5rem;
+        border-top: 1px solid #33a357;
+        position: relative;
+        z-index: 1;
+    }
+
+    /* Styles for when navbar only has auth buttons */
+    .navMenu.authOnly {
+        justify-content: center;
+        padding: 0;
+    }
+
+    .navMenu.authOnly .navMenuItems {
+        display: none; /* Hide empty UL on mobile */
+    }
+
+    .navMenu.authOnly .navButtonsMobile {
+        margin-top: 0;
+        border-top: none;
+        padding: 2rem;
+    }
+
+    .fullWidthLink {
+        width: 100%;
+        display: block;
+    }
+
+    .button {
+        width: 100%;
+        padding: 14px;
+        font-size: 1.1rem;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .navbarContainer {
+        padding: 0 20px;
+    }
+}

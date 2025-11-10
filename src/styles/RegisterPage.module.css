@@ -1,0 +1,105 @@
+.pageContainer {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+    background-color: #f4f7f6;
+}
+
+.content {
+    flex: 1;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 120px 2rem 4rem 2rem; /* Top padding to account for absolute navbar */
+    background: url('/assets/register-background.webp') no-repeat center center;
+    background-size: cover;
+    position: relative;
+}
+
+.content::before {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 140, 47, 0.1);
+}
+
+.registerForm {
+    position: relative;
+    z-index: 2;
+    background: #ffffff;
+    padding: 2.5rem;
+    border-radius: 16px;
+    width: 100%;
+    max-width: 500px;
+    display: flex;
+    flex-direction: column;
+    gap: 1.25rem;
+    box-shadow: 0 10px 30px rgba(0,0,0,0.1);
+    border-top: 5px solid #008c2f;
+}
+
+.registerForm h2 {
+    text-align: center;
+    color: #008c2f;
+    margin: 0 0 0.25rem 0;
+    font-weight: 700;
+    font-size: 1.75rem;
+}
+
+.registerForm p {
+    text-align: center;
+    color: #555;
+    margin: 0 0 1rem 0;
+}
+
+.inputGroup {
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+}
+
+.registerForm label {
+    font-weight: 600;
+    color: #333;
+    font-size: 0.9rem;
+}
+
+.registerForm input {
+    padding: 12px 15px;
+    border: 1px solid #ccc;
+    border-radius: 8px;
+    font-size: 1rem;
+    transition: border-color 0.3s, box-shadow 0.3s;
+}
+
+.registerForm input:focus {
+    border-color: #008c2f;
+    outline: none;
+    box-shadow: 0 0 0 3px rgba(0, 140, 47, 0.1);
+}
+
+.registerForm input::placeholder {
+    color: #aaa;
+}
+
+.registerForm button {
+    margin-top: 1rem;
+    padding: 14px 20px;
+    background-color: #008c2f;
+    color: #fff;
+    font-weight: 600;
+    font-size: 1.1rem;
+    border: none;
+    border-radius: 50px;
+    cursor: pointer;
+    transition: all 0.3s ease-in-out;
+}
+
+.registerForm button:hover {
+    background-color: #007a2a;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 15px rgba(0, 140, 47, 0.3);
+}

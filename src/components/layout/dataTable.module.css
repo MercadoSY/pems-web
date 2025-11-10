@@ -1,0 +1,93 @@
+.table {
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 auto;
+  max-width: 700px;
+  border-radius: 16px;
+  overflow: hidden;
+  box-shadow: 0 8px 30px rgba(0, 0, 0, 0.08);
+  background-color: #ffffff;
+}
+
+.table-cell {
+  box-sizing: border-box;
+  flex: 1 1 50%;
+  padding: 1.1rem 1.5rem;
+  display: flex;
+  align-items: center;
+  font-weight: 500;
+  min-height: 60px;
+  transition: background-color 0.2s ease;
+}
+
+/* Header Cells */
+.header {
+  background-color: #f0fff4; /* Light green background */
+  min-height: 65px;
+  justify-content: center; /* Center both header cells */
+}
+
+.header > h3 {
+  font-size: 1.1rem;
+  margin: 0;
+  font-weight: 700;
+  color: #008c2f; /* Theme color for text */
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+}
+
+/* Feature cell (left column) */
+.cell-feature {
+  justify-content: flex-start; /* Left-align content (Best for readability) */
+  text-align: left;           /* Left-align text */
+  font-size: 1rem;
+  color: #343a40;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Checkmark cell (right column) */
+.cellCheck {
+  justify-content: center;
+  border-top: 1px solid #f0f0f0;
+}
+
+/* Zebra-striping for feature rows */
+.striped {
+    background-color: #fafdfb;
+}
+
+/* --- Mobile Responsiveness --- */
+@media screen and (max-width: 600px) {
+  .table {
+    border-radius: 0;
+    max-width: 100%;
+    box-shadow: none;
+    border-top: 1px solid #e9ecef;
+    border-bottom: 1px solid #e9ecef;
+  }
+  
+  .header:not(:last-of-type) {
+    display: none; /* Hide "Features" header */
+  }
+
+  .header {
+    flex: 1 1 100%;
+  }
+
+  .cell-feature {
+    justify-content: flex-start;
+    text-align: left;
+    flex: 1 1 70%;
+    padding: 0.8rem 1rem;
+    font-size: 0.95rem;
+  }
+
+  .cellCheck {
+    flex: 1 1 30%;
+  }
+
+  /* Disable zebra striping on mobile for a cleaner look */
+  .striped {
+      background-color: transparent;
+  }
+}

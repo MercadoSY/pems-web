@@ -1,0 +1,107 @@
+/* Converted from SCSS to pure CSS for React CSS modules */
+
+:root {
+  --arrow: #3c376f;
+  --bg: #fef8f9;
+}
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+body {
+  margin: 0;
+  background: var(--bg);
+}
+
+.container {
+  max-width: 800px;
+  margin: 0 auto;
+  padding: 50px;
+  margin-left: 100px;
+}
+
+button {
+  position: relative;
+  display: inline-block;
+  cursor: pointer;
+  outline: none;
+  border: 0;
+  vertical-align: middle;
+  text-decoration: none;
+  background: transparent;
+  padding: 20px 5px;
+  color: var(--arrow);
+  font-size: 2rem;
+  transition: transform 0.3s ease;
+}
+
+button span {
+  position: relative;
+  display: inline-block;
+  transform: translateX(0);
+  transition: transform 0.3s ease;
+}
+
+.previous:hover span {
+  transform: translateX(-10px) scale(1.2);
+}
+
+.next:hover span {
+  transform: translateX(10px) scale(1.2);
+}
+
+
+.slider-nav ul {
+  list-style: none;
+  margin: 0;
+  padding: 0;
+  display: flex;
+  justify-content: center;
+}
+
+.slider-nav li {
+  display: flex;
+  flex: 2;
+  text-align: center;
+}
+
+.slider img {
+  width: 600px;          /* fixed width */
+  height: 400px;         /* fixed height */
+  object-fit: cover;     /* fills the box while keeping proportions */
+  display: none;
+  box-shadow: 10px 10px 20px 0 rgba(94, 47, 59, 0.2);
+  border-radius: 10px;   /* optional for rounded corners */
+}
+
+.slider img.active {
+  display: block;
+  animation: fadeImg 0.8s;
+}
+
+.slider-nav .arrow {
+  flex: 0 0 15%;
+}
+
+.slider-nav a {
+  flex-basis: 100%;
+  display: flex;
+  align-items: center;
+}
+
+.slider-nav span {
+  display: block;
+  width: 100%;
+}
+
+@keyframes fadeImg {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}

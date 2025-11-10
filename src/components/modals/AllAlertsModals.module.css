@@ -1,0 +1,79 @@
+/* src/components/modals/AllAlertsModals.module.css */
+
+.listGroupItem {
+  padding-left: 0.5rem;
+  padding-right: 0.5rem;
+  transition: background-color 0.15s ease-in-out;
+}
+
+.listGroupItem:hover {
+    background-color: #f8f9fa; /* A very light grey */
+}
+
+.unacknowledgedItem {
+  font-weight: 600;
+}
+
+.acknowledgedItem {
+  opacity: 0.7;
+}
+
+.acknowledgedItem:hover {
+    opacity: 1;
+}
+
+.alertMessage {
+  transition: color 0.15s ease-in-out, text-decoration-color 0.15s ease-in-out;
+}
+
+.historySeparator {
+  display: flex;
+  align-items: center;
+  text-align: center;
+  color: #6c757d;
+  padding: 1rem;
+  font-weight: 500;
+  background-color: #f8f9fa;
+  border-top: 1px solid #dee2e6;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.historySeparator::before,
+.historySeparator::after {
+  content: '';
+  flex: 1;
+  border-bottom: 1px solid #dee2e6;
+}
+
+.historySeparator:not(:empty)::before {
+  margin-right: .5em;
+}
+
+.historySeparator:not(:empty)::after {
+  margin-left: .5em;
+}
+
+.actionTakenContainer {
+    font-style: italic;
+    font-size: 0.8rem;
+    display: flex;
+    align-items: center;
+}
+
+.actionTakenContainer i {
+    font-size: 0.9rem;
+}
+
+
+@media (max-width: 768px) {
+  .listGroupItem {
+    padding: 0.75rem 1rem !important;
+    white-space: normal;
+    word-break: break-word;
+  }
+  
+  .alertMessage {
+    font-size: 0.875rem;
+    line-height: 1.4;
+  }
+}

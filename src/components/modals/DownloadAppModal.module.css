@@ -1,0 +1,272 @@
+/* src/components/modals/DownloadAppModal.module.css */
+.modalOverlay {
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background-color: rgba(0, 0, 0, 0.65);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 1050;
+  backdrop-filter: blur(4px);
+}
+
+.modalContent {
+  background-color: #ffffff;
+  color: #212529;
+  padding: 0;
+  border-radius: 12px;
+  width: 90%;
+  max-width: 600px;
+  box-shadow: 0 5px 20px rgba(0, 0, 0, 0.25);
+  border: 1px solid #dee2e6;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.modalHeader {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background-image: linear-gradient(135deg, #1e88e5 0%, #0d6efd 100%);
+  color: #ffffff;
+  padding: 1.25rem 1.5rem;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.1);
+}
+
+.modalHeader h2 {
+  margin: 0;
+  font-size: 1.3rem;
+  font-weight: 600;
+}
+
+.closeButton {
+  background: none;
+  border: none;
+  font-size: 2rem;
+  cursor: pointer;
+  color: rgba(255, 255, 255, 0.8);
+  padding: 0;
+  line-height: 1;
+  transition: color 0.2s ease;
+}
+
+.closeButton:hover {
+  color: #fff;
+}
+
+.modalBody {
+  display: flex;
+  flex-direction: column;
+  gap: 1.5rem;
+  max-height: 70vh;
+  overflow-y: auto;
+  padding: 1.5rem;
+}
+
+/* Custom Scrollbar Styling */
+.modalBody::-webkit-scrollbar {
+  width: 12px;
+}
+
+.modalBody::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+
+.modalBody::-webkit-scrollbar-thumb {
+  background-color: #adb5bd;
+  border-radius: 10px;
+  border: 3px solid #f1f1f1;
+}
+
+.modalBody::-webkit-scrollbar-thumb:hover {
+  background-color: #6c757d;
+}
+
+.guidelines {
+    font-size: 0.9rem;
+    color: #0f5132;
+    background-color: #d1e7dd;
+    padding: 1rem;
+    border-radius: 6px;
+    border-left: 4px solid #198754;
+}
+
+.guidelines ul {
+    margin: 0;
+    padding-left: 1.2rem;
+}
+
+.warningNotice {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  font-size: 0.9rem;
+  color: #842029;
+  background-color: #f8d7da;
+  padding: 1rem;
+  border-radius: 6px;
+  border-left: 4px solid #b02a37;
+}
+
+.warningNotice i {
+  font-size: 1.2rem;
+}
+
+.formGroup {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+  position: relative;
+}
+
+.formGroup label {
+  font-weight: 600;
+  color: #495057;
+}
+
+.formGroup select,
+.formGroup .inputWrapper input {
+  width: 100%;
+  padding: 0.75rem;
+  border-radius: 6px;
+  border: 1px solid #ced4da;
+  background-color: #ffffff;
+  color: #495057;
+  font-size: 1rem;
+}
+
+.formGroup select:focus,
+.formGroup .inputWrapper input:focus {
+  outline: none;
+  border-color: #86b7fe;
+  box-shadow: 0 0 0 0.25rem rgb(13 110 253 / 25%);
+}
+
+.inputWrapper {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+.inputWrapper input {
+  flex-grow: 1;
+}
+
+.actionButton {
+  background-color: #e9ecef;
+  color: #212529;
+  border: 1px solid #ced4da;
+  padding: 0.75rem 1rem;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background-color 0.2s ease;
+  white-space: nowrap;
+  display: flex;
+  align-items: center;
+  gap: 0.4rem;
+}
+
+.actionButton:hover {
+  background-color: #dee2e6;
+}
+
+.actionButton:disabled {
+  opacity: 0.65;
+  cursor: not-allowed;
+}
+
+.actionButton .bi {
+    margin-right: 0.1rem;
+}
+
+.copySuccess {
+    color: #0f5132;
+    font-size: 0.8rem;
+    position: absolute;
+    top: -1.2rem;
+    right: 0;
+    background: #d1e7dd;
+    padding: 2px 6px;
+    border-radius: 4px;
+    opacity: 0;
+    transition: opacity 0.3s ease-in-out;
+}
+  
+.copySuccess.visible {
+    opacity: 1;
+}
+
+.premadeMessage {
+  background-color: #f1f3f5;
+  padding: 1rem;
+  border-radius: 6px;
+  border: 1px solid #dee2e6;
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Courier New', Courier, monospace;
+  font-size: 0.9rem;
+  line-height: 1.6;
+  color: #343a40;
+}
+
+.premadeMessageHeader {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.5rem;
+}
+
+.copyAllButton {
+    background-color: #198754;
+    color: #ffffff;
+    font-weight: bold;
+    border: none;
+    padding: 0.5rem 1rem;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+.copyAllButton:hover {
+    background-color: #157347;
+}
+
+.modalFooter {
+  display: flex;
+  justify-content: flex-end;
+  padding: 1rem 1.5rem;
+  border-top: 1px solid #dee2e6;
+  background-color: #f8f9fa;
+}
+
+.closeModalButton {
+  background-color: #6c757d;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  font-size: 1rem;
+  transition: background-color 0.2s ease;
+}
+
+.closeModalButton:hover {
+  background-color: #5a6268;
+}
+
+.loading, .error {
+    text-align: center;
+    padding: 2rem;
+    font-size: 1.2rem;
+}
+
+.error {
+    color: #842029;
+    background-color: #f8d7da;
+    border: 1px solid #f5c2c7;
+    border-radius: 6px;
+}
