@@ -6,7 +6,7 @@
       "headers": [
         {
           "key": "Access-Control-Allow-Origin",
-          "value": "https://pems-webcomm.vercel.app"
+          "value": "https://web-pems.vercel.app/"
         },
         {
           "key": "Strict-Transport-Security",
