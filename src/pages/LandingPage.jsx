@@ -1,31 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import Navbar_home from '../components/layout/NavbarHome';
+import React, { useEffect, useCallback } from 'react';
+import { useHeaderFooterLayout } from '../components/layout/HeaderFooterLayout';
 import DataTable from '../components/layout/dataTable';
-import Footer from '../components/layout/Footer';
 import cloud from '../../public/assets/icon_cloud.webp';
 import sensor from '../../public/assets/icon_sensor.webp';
 import analysis from '../../public/assets/icon_analysis.webp';
 import styles from '../styles/LandingPage.module.css';
 
+const navLinks = [
+  { id: 'AboutSection', label: 'About' },
+  { id: 'TechnologySection', label: 'Technologies' },
+  { id: 'DemoSection', label: 'Demo' },
+  { id: 'GallerySection', label: 'Gallery' },
+  { id: 'FeaturesSection', label: 'Features' },
+];
+
 /**
  * The main landing page component for the PEMS application.
  */
 function LandingPage() {
-  const [activeSection, setActiveSection] = useState('');
+  const { setHeaderProps } = useHeaderFooterLayout();
 
   const galleryImages = [
     '/assets/gallery001.webp',
     '/assets/gallery002.webp',
     '/assets/gallery003.webp',
   ];
-
-  const navLinks = [
-    { id: 'AboutSection', label: 'About' },
-    { id: 'TechnologySection', label: 'Technologies' },
-    { id: 'DemoSection', label: 'Demo' },
-    { id: 'GallerySection', label: 'Gallery' },
-    { id: 'FeaturesSection', label: 'Features' },
-  ];
+  
+  /**
+   * Smoothly scrolls to a specific section on the page.
+   */
+  const scrollToSection = useCallback((id) => {
+    const section = document.getElementById(id);
+    if (section) {
+      const yOffset = -90; // Adjust for sticky nav height
+      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
+      window.scrollTo({ top: y, behavior: 'smooth' });
+    }
+  }, []);
 
   useEffect(() => {
     // Manually control scroll restoration to ensure page loads at the top.
@@ -34,65 +45,44 @@ function LandingPage() {
     }
     window.scrollTo(0, 0);
 
-    // Set the first link as active by default
-    if(navLinks.length > 0) {
-      setActiveSection(navLinks[0].id);
-    }
+    // Set the initial state for the header in the parent layout
+    setHeaderProps({
+      navLinks,
+      activeSection: navLinks.length > 0 ? navLinks[0].id : '',
+      scrollToSection,
+    });
 
     const observer = new IntersectionObserver(
       (entries) => {
-        entries.forEach((entry) => {
-          if (entry.isIntersecting) {
-            setActiveSection(entry.target.id);
-          }
-        });
+        const intersectingEntry = entries.find(entry => entry.isIntersecting);
+        if (intersectingEntry) {
+          setHeaderProps(prevProps => ({ ...prevProps, activeSection: intersectingEntry.target.id }));
+        }
       },
-      { rootMargin: '-40% 0px -60% 0px' } 
+      { rootMargin: '-40% 0px -60% 0px' }
     );
 
     navLinks.forEach((link) => {
       const el = document.getElementById(link.id);
-      if (el) {
-        observer.observe(el);
-      }
+      if (el) observer.observe(el);
     });
 
     return () => {
       navLinks.forEach((link) => {
         const el = document.getElementById(link.id);
-        if (el) {
-          observer.unobserve(el);
-        }
+        if (el) observer.unobserve(el);
       });
-      // Restore default browser behavior on component unmount.
+      // Restore default browser behavior and clear header props on unmount.
       if ('scrollRestoration' in window.history) {
         window.history.scrollRestoration = 'auto';
       }
+      setHeaderProps({});
     };
-  }, []); // eslint-disable-line react-hooks/exhaustive-deps
+  }, [setHeaderProps, scrollToSection]);
 
-
-  /**
-   * Smoothly scrolls to a specific section on the page.
-   * @param {string} id - The ID of the element to scroll to.
-   */
-  const scrollToSection = (id) => {
-    const section = document.getElementById(id);
-    if (section) {
-      const yOffset = -90; // Adjust for sticky nav height
-      const y = section.getBoundingClientRect().top + window.pageYOffset + yOffset;
-      window.scrollTo({ top: y, behavior: 'smooth' });
-    }
-  };
 
   return (
     <div className={styles.landingPage}>
-      <Navbar_home 
-        navLinks={navLinks}
-        activeSection={activeSection}
-        scrollToSection={scrollToSection}
-      />
-
       <main>
         <section id='AboutSection' className={`${styles.section} ${styles.aboutSection}`}>
           <div className={styles.aboutContent}>
@@ -184,7 +174,6 @@ function LandingPage() {
           <DataTable />
         </section>
       </main>
-      <Footer />
     </div>
   );
 }

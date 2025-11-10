@@ -1,7 +1,5 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate } from 'react-router-dom';
-import Navbar_home from '../components/layout/NavbarHome';
-import Footer from '../components/layout/Footer';
 import PaymentGatewayModal from '../components/modals/PaymentGatewayModal';
 import styles from '../styles/RegisterPage.module.css';
 
@@ -82,8 +80,7 @@ export default function RegisterPage() {
     };
 
     return (
-        <div className={styles.pageContainer}>
-            <Navbar_home activePage="register" position="absolute" showPattern={true} />
+        <>
             <main className={styles.content}>
                 <form className={styles.registerForm} onSubmit={handleSubmit}>
                     <h2>Create Your PEMS Account</h2>
@@ -154,7 +151,6 @@ export default function RegisterPage() {
                     onPaymentSuccess={handlePaymentSuccess}
                 />
             )}
-            <Footer />
-        </div>
+        </>
     )
 }
