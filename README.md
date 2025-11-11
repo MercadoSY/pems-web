@@ -26,7 +26,7 @@
 
 The repository for the companion mobile application can be found below.
 
-[**PEMS Mobile**]()
+[**PEMS Mobile**](https://github.com/MercadoSY/pems-mobile)
 
 <br />
 
