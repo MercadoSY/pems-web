@@ -2,6 +2,7 @@ import React, { Suspense, lazy, useEffect, useState } from 'react';
 import { BrowserRouter as Router, Routes, Route, Navigate, Outlet } from 'react-router-dom';
 import { auth } from './firebase/firebaseConfig';
 import { onAuthStateChanged, signOut } from 'firebase/auth';
+import HeaderFooterLayout from './components/layout/HeaderFooterLayout';
 
 // PERFORMANCE: Lazily load page components for code-splitting.
 const LandingPage = lazy(() => import('./pages/LandingPage'));
@@ -93,10 +94,15 @@ function App() {
     <Router>
       <Suspense fallback={<PageLoader />}>
         <Routes>
-          {/* Public route for login. If user is already authenticated, redirect to dashboard. */}
-          <Route path="/home" element={!user ? <LandingPage /> : <Navigate to="/dashboard" replace />} />
+          {/* Public routes with shared layout (Header/Footer) */}
+          <Route element={!user ? <HeaderFooterLayout /> : <Navigate to="/dashboard" replace />}>
+            <Route path="/home" element={<LandingPage />} />
+            <Route path="/register" element={<RegisterPage />} />
+          </Route>
+
+          {/* Standalone public route for login. Does not use the shared layout. */}
           <Route path="/login" element={!user ? <LoginPage /> : <Navigate to="/dashboard" replace />} />
-          <Route path="/register" element={!user ? <RegisterPage /> : <Navigate to="/dashboard" replace />} />
+          
           {/* Protected Routes are nested under a route element that uses the secure ProtectedRoute component. */}
           <Route element={<ProtectedRoute user={user} />}>
             <Route path="/dashboard" element={<DashboardPage />} />

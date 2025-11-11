@@ -1,12 +1,12 @@
 import React, { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import styles from './NavbarHome.module.css';
-import { FaBars, FaTimes } from 'react-icons/fa';
+import styles from './HeaderFooter.module.css';
+import { FaBars, FaTimes, FaGithub } from 'react-icons/fa';
 
 /**
  * Renders a responsive, reusable navigation bar for the application.
  */
-function Navbar_home({ 
+export function Header({ 
     navLinks, 
     activeSection, 
     scrollToSection, 
@@ -104,4 +104,36 @@ function Navbar_home({
     );
 }
 
-export default Navbar_home;
+/**
+ * Renders the footer section for the website.
+ */
+export function Footer() {
+    return (
+        <footer className={styles.footer}>
+            <div className={styles.footerContainer}>
+                <div className={styles.footerInfo}>
+                    <div className={styles.logoContainer}>
+                        <img src="/logo.webp" alt="PEMS Logo" className={styles.footerLogo} />
+                        <h2 className={styles.title}>PEMS<span className={styles.dotcolor}>.</span></h2>
+                    </div>
+                    <p>Revolutionizing poultry farm management through smart IoT solutions.</p>
+                    <p className={styles.contact}>Contact us: <a href="mailto:PEMSSupport@gmail.com">PEMSSupport@gmail.com</a></p>
+                    <div className={styles.socialLinks}>
+                        <a 
+                            href="https://github.com/MercadoSY/pems-web" 
+                            target="_blank" 
+                            rel="noopener noreferrer" 
+                            className={styles.socialLink}
+                            aria-label="GitHub Repository"
+                        >
+                            <FaGithub />
+                        </a>
+                    </div>
+                </div>
+                <div className={styles.footerCopyright}>
+                    <p>&copy; {new Date().getFullYear()} PEMS. All Rights Reserved.</p>
+                </div>
+            </div>
+        </footer>
+    );
+}

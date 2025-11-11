@@ -5,7 +5,6 @@ import { auth } from '../firebase/firebaseConfig';
 import { signInWithEmailAndPassword, setPersistence, browserLocalPersistence, browserSessionPersistence } from 'firebase/auth';
 import styles from '../styles/LoginPage.module.css';
 import ForgotPasswordModal from '../components/modals/ForgotPasswordModal';
-import Navbar_register from '../components/layout/NavbarRegister';
 
 // Renders the login page for user authentication.
 const LoginPage = () => {

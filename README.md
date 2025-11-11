@@ -9,7 +9,7 @@
   <img src="https://img.shields.io/badge/Firebase-11.8.1-orange?style=for-the-badge&logo=firebase" alt="Firebase">
   <br />
   <br />
-  <a href="#"><strong>Website</strong></a>
+  <a href="https://web-pems.vercel.app/"><strong>Website</strong></a>
 </div>
 
 <br />
@@ -89,9 +89,13 @@ The repository for the companion mobile application can be found below.
 
 ## © Credits & Attributions
 
-*   **UI Framework**: Built with [Bootstrap](https://getbootstrap.com/) and [React-Bootstrap](https://react-bootstrap.github.io/).
-*   **Icons**: Some icons are sourced from [Flaticon](https://www.flaticon.com/) and [Bootstrap Icons](https://icons.getbootstrap.com/).
-
+*   **Data Visualization**: Charts are rendered using [Chart.js](https://www.chartjs.org/) and the [React-Chartjs-2](https://react-chartjs-2.js.org/) wrapper.
+*   **Report Generation**: PDF reports are created with [jsPDF](https://github.com/parallax/jsPDF) and the [jsPDF-AutoTable](https://github.com/simonbengtsson/jsPDF-AutoTable) plugin.
+*   **Icons**: Icons are provided by [Bootstrap Icons](https://icons.getbootstrap.com/), [React Icons](https://react-icons.github.io/react-icons/), [Lineicons](https://lineicons.com/), and [Flaticon](https://www.flaticon.com/).
+*   **Utilities**:
+    *   Date and time operations are managed with [date-fns](https://date-fns.org/).
+    *   Statistical analysis is performed using [Simple Statistics](https://simple-statistics.github.io/).
+    
 <br />
 
 ## ꗃ License
@@ -100,4 +104,4 @@ This project is licensed under the [Creative Commons Attribution-NonCommercial 4
 
 <a rel="license" href="http://creativecommons.org/licenses/by-nc/4.0/"><img alt="Creative Commons License" style="border-width:0" src="https://i.creativecommons.org/l/by-nc/4.0/88x31.png" /></a>
 
-You are free to share and adapt the code for any **non-commercial purpose**. You may **not** use this project for commercial purposes without permission.
+You are free to share and adapt the code for any **non-commercial purpose**. You may **not** use this project for commercial purposes without permission.**strong text**
