@@ -78,6 +78,11 @@ const Sidebar = ({ isExpanded, toggleSidebar }) => {
               <i className="bi bi-truck"></i><span>Order</span>
             </Link>
           </li>
+          <li className={`${styles.sidebarItem} ${isActive('/history-logs') ? styles.active : ''}`}>
+            <Link to="/history-logs" className={styles.sidebarLink}>
+              <i className="bi bi-clock-history"></i><span>History Logs</span>
+            </Link>
+          </li>
           <li className={`${styles.sidebarItem} ${styles.utilitySectionStart}`}>
             <a href="#" onClick={handleDownloadAppClick} className={styles.sidebarLink}>
               <i className="bi bi-phone-fill"></i><span>Download App</span>

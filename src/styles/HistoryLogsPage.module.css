@@ -1,0 +1,159 @@
+.mainContent {
+    min-height: 100vh;
+    width: 100%;
+    padding: 20px;
+    transition: filter 0.3s ease-in-out;
+    background-color: #F4FDFF;
+}
+
+/* When sidebar is collapsed */
+.mainContent.collapsed {
+    margin-left: 80px;
+}
+
+.buttonContainer {
+    display: flex;
+    justify-content: end;
+    margin: 20px 0;
+}
+
+.pageHeader {
+    margin-bottom: 1rem;
+}
+
+.title {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    font-size: 2rem;
+    font-weight: bold;
+}
+
+.iconSpan {
+    background: none;
+    border: none;
+    padding: 0;
+    color: black;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.pageHeader h1 {
+    font-size: 30px;
+    font-weight: 600;
+}
+
+.pageHeader p {
+    opacity: 0.8;
+}
+
+.exportButton {
+    all: unset;
+    display: inline-block;
+    text-align: center;
+    font-family: inherit;
+    font-size: 0.95rem;
+    padding: 10px 20px;
+    background-color: #0070f3;
+    color: #fff;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    transition: background 0.2s ease, transform 0.1s ease;
+    box-sizing: border-box;
+}
+
+.exportButton:hover {
+    background-color: #005bb5;
+    transform: translateY(-1px);
+}
+
+.exportButton:active {
+    transform: scale(0.97);
+}
+
+.logsContainer {
+    display: flex;
+    flex-direction: column;
+    gap: 20px;
+    margin-top: 20px;
+    min-height: 200px;
+    background-color: #ffffff;
+    border-radius: 12px;
+    box-shadow: 0 1px 5px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+    border: 1px solid #e0e0e0;
+}
+
+.emptyMessage {
+    text-align: center;
+    width: 100%;
+    padding: 60px 0;
+    color: #555;
+}
+
+.logsList {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.logCard {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    background: #fff;
+    padding: 1rem 1.5rem;
+    border-radius: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    transition: transform 0.2s ease;
+    width: 100%;
+    border-left: 6px solid #3b7ddd; /* Differentiated with a blue tone */
+    box-sizing: border-box;
+}
+
+.logCard:hover {
+    transform: translateY(-3px);
+}
+
+.logInfo {
+    flex: 1;
+}
+
+.logInfo h3 {
+    margin: 0 0 0.5rem 0;
+    font-size: 1.2rem;
+    color: #333;
+    font-weight: 600;
+}
+
+.logInfo p {
+    margin: 0.2rem 0;
+    line-height: 1.4;
+    color: #555;
+}
+
+.logTime {
+    font-size: 0.9rem;
+    color: #666;
+    white-space: nowrap;
+    margin-left: 1rem;
+    display: flex;
+    align-items: center;
+    font-weight: 500;
+}
+
+/* Mobile specific styling */
+@media (max-width: 768px) {
+    .logCard {
+        flex-direction: column;
+        gap: 10px;
+    }
+    
+    .logTime {
+        margin-left: 0;
+        align-self: flex-start;
+        font-size: 0.85rem;
+    }
+}

@@ -7,13 +7,14 @@ import HeaderFooterLayout from './components/layout/HeaderFooterLayout';
 // PERFORMANCE: Lazily load page components for code-splitting.
 const LandingPage = lazy(() => import('./pages/LandingPage'));
 const LoginPage = lazy(() => import('./pages/LoginPage'));
-const RegisterPage = lazy(() => import('./pages/RegisterPage'))
+const RegisterPage = lazy(() => import('./pages/RegisterPage'));
 const DashboardPage = lazy(() => import('./pages/DashboardPage'));
 const PoultryListPage = lazy(() => import('./pages/PoultryListPage'));
 const AnalyticsPage = lazy(() => import('./pages/AnalyticsPage'));
 const GenerateReportPage = lazy(() => import('./pages/GenerateReportPage'));
 const WorkersPage = lazy(() => import('./pages/WorkersPage'));
 const OrderPage = lazy(() => import('./pages/OrderPage'));
+const HistoryLogsPage = lazy(() => import('./pages/HistoryLogsPage'));
 const SettingsPage = lazy(() => import('./pages/SettingsPage'));
 
 // A lightweight loading component to show while lazy-loaded components are fetched.
@@ -111,6 +112,7 @@ function App() {
             <Route path="/generate-report" element={<GenerateReportPage />} />
             <Route path="/workers" element={<WorkersPage />} />
             <Route path="/order" element={<OrderPage />} />
+            <Route path="/history-logs" element={<HistoryLogsPage />} />
             <Route path="/settings" element={<SettingsPage />} />
           </Route>
 
