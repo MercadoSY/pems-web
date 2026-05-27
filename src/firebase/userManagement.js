@@ -17,6 +17,7 @@ import {
 } from 'firebase/firestore';
 import { db, functions } from './firebaseConfig';
 import { httpsCallable } from 'firebase/functions';
+import { logAction } from './history';
 
 const encodeEmail = (email) => email.replace(/\./g, ',');
 const decodeEmail = (encodedKey) => encodedKey.replace(/,/g, '.');
@@ -176,6 +177,30 @@ export const fetchAllUsersAndAdmins = async () => {
 };
 
 /**
+ * Fetches details for a specific admin user by email.
+ * @param {string} email The admin's email.
+ * @returns {Promise<object|null>} The admin's data object or null if not found.
+ */
+export const fetchAdminDetails = async (email) => {
+  if (!email) return null;
+  try {
+      const adminsDocRef = doc(db, 'poultryWorkers', 'Admins');
+      const adminsDocSnap = await getDoc(adminsDocRef);
+
+      if (adminsDocSnap.exists()) {
+          const adminsData = adminsDocSnap.data();
+          const encodedEmail = encodeEmail(email);
+          if (adminsData && Object.prototype.hasOwnProperty.call(adminsData, encodedEmail)) {
+              return adminsData[encodedEmail];
+          }
+      }
+  } catch (error) {
+      console.error("Error fetching admin details:", error);
+  }
+  return null;
+};
+
+/**
  * Calls a Cloud Function to create a new admin user without affecting the current session.
  * @param {string} name The admin's full name.
  * @param {string} email The admin's email address.
@@ -193,6 +218,7 @@ export const createAdmin = async (name, email, password) => {
       throw new Error(result.data.message || 'Failed to create admin via Cloud Function.');
     }
     console.log(`Admin user creation initiated for: ${email}`);
+    await logAction(`Initiated admin creation for "${email}"`).catch(console.error);
   } catch (error) {
     console.error("Error calling createAdminUser function:", error);
     // The callable function throws an error with a 'message' property
@@ -233,6 +259,7 @@ export const createWorker = async (name, phoneNumber, branchId) => {
 
   await batch.commit();
   console.log(`Created new worker record for ${name} with phone ${formattedPhoneNumber}`);
+  await logAction(`Created worker profile for "${name}"`).catch(console.error);
 };
 
 /**
@@ -240,11 +267,15 @@ export const createWorker = async (name, phoneNumber, branchId) => {
  * @param {string} email The email of the admin to delete.
  */
 export const deleteAdmin = async (email) => {
+  const adminDetails = await fetchAdminDetails(email);
+  const adminName = adminDetails?.name || email;
+
   const adminsDocRef = doc(db, 'poultryWorkers', 'Admins');
   const encodedEmail = encodeEmail(email);
 
   await updateDoc(adminsDocRef, { [encodedEmail]: deleteField() });
   console.log(`Deleted admin Firestore record for: ${email}`);
+  await logAction(`Deleted admin profile for "${adminName}"`).catch(console.error);
 
   try {
     await deleteAuthUserByPayload({ email });
@@ -266,6 +297,7 @@ export const deleteWorker = async (workerId) => {
   if (!workerSnap.exists()) { throw new Error("Worker not found."); }
 
   const workerData = workerSnap.data();
+  const workerName = workerData.name || workerId;
   const batch = writeBatch(db);
 
   if (workerData.branch && Array.isArray(workerData.branch)) {
@@ -278,7 +310,8 @@ export const deleteWorker = async (workerId) => {
 
   batch.delete(workerDocRef);
   await batch.commit();
-  console.log(`Deleted worker with ID: ${workerId}`);
+  console.log(`Deleted worker "${workerName}" (ID: ${workerId})`);
+  await logAction(`Deleted worker "${workerName}"`).catch(console.error);
 };
 
 /**
@@ -302,6 +335,21 @@ export const updateWorker = async (originalPhoneNumber, newData) => {
     const oldData = oldWorkerSnap.data();
     const oldBranchRefs = oldData.branch || [];
     const newBranchRef = doc(db, 'poultryHouses', branchId);
+
+    // --- Determine changes for history log ---
+    const changes = [];
+    if (oldData.name !== name) {
+        changes.push(`Name: '${oldData.name || 'N/A'}' -> '${name}'`);
+    }
+    if (originalPhoneNumber !== formattedNewPhoneNumber) {
+        changes.push(`Phone: '${originalPhoneNumber}' -> '${formattedNewPhoneNumber}'`);
+    }
+    const oldBranchId = oldBranchRefs.length > 0 ? oldBranchRefs[0].id : 'Unassigned';
+    if (oldBranchId !== branchId) {
+        changes.push(`Branch: '${oldBranchId}' -> '${branchId}'`);
+    }
+    const changeStr = changes.length > 0 ? ` Changes: ${changes.join(', ')}.` : '';
+    // -----------------------------------------
 
     if (originalPhoneNumber !== formattedNewPhoneNumber) {
         const newWorkerRef = doc(db, 'poultryWorkers', formattedNewPhoneNumber);
@@ -332,30 +380,7 @@ export const updateWorker = async (originalPhoneNumber, newData) => {
     }
 
     await batch.commit();
-};
-
-/**
- * Fetches details for a specific admin user by email.
- * @param {string} email The admin's email.
- * @returns {Promise<object|null>} The admin's data object or null if not found.
- */
-export const fetchAdminDetails = async (email) => {
-    if (!email) return null;
-    try {
-        const adminsDocRef = doc(db, 'poultryWorkers', 'Admins');
-        const adminsDocSnap = await getDoc(adminsDocRef);
-
-        if (adminsDocSnap.exists()) {
-            const adminsData = adminsDocSnap.data();
-            const encodedEmail = encodeEmail(email);
-            if (adminsData && Object.prototype.hasOwnProperty.call(adminsData, encodedEmail)) {
-                return adminsData[encodedEmail];
-            }
-        }
-    } catch (error) {
-        console.error("Error fetching admin details:", error);
-    }
-    return null;
+    await logAction(`Updated worker details for "${name}".${changeStr}`).catch(console.error);
 };
 
 /**
@@ -368,12 +393,18 @@ export const updateAdminName = async (email, newName) => {
         throw new Error("A valid email and a non-empty name are required.");
     }
 
+    const oldDetails = await fetchAdminDetails(email);
+    const oldName = oldDetails?.name || 'Unknown';
+
     const adminsDocRef = doc(db, 'poultryWorkers', 'Admins');
     const encodedEmail = encodeEmail(email);
+    const trimmedNewName = newName.trim();
     
     await updateDoc(adminsDocRef, {
-        [`${encodedEmail}.name`]: newName.trim()
+        [`${encodedEmail}.name`]: trimmedNewName
     });
+    
+    await logAction(`Updated admin details for "${email}". Changes: Name: '${oldName}' -> '${trimmedNewName}'.`).catch(console.error);
 };
 
 
@@ -400,6 +431,7 @@ export const approveRegistration = async (pendingUser) => {
         console.warn(`User ${phoneNumber} approved, but failed to delete temporary auth account. Please do it manually. Error: ${error.message}`);
     }
     
+    await logAction(`Approved registration for "${pendingUser.name || pendingUser.id}"`).catch(console.error);
     return result;
 };
 
@@ -415,6 +447,8 @@ export const rejectRegistration = async (pendingUser) => {
     await deleteDoc(pendingDocRef);
     console.log(`Rejected (deleted) pending registration for ${phoneNumber} from Firestore.`);
     
+    await logAction(`Rejected registration for "${pendingUser.name || pendingUser.id}"`).catch(console.error);
+
     try {
         // For Auth, number must be in E.164 format (e.g., +63912...). Remove spaces.
         const phoneNumberForAuth = phoneNumber.replace(/\s/g, '');
@@ -464,4 +498,5 @@ export const updateRegisterKey = async (newKey) => {
     if (typeof newKey !== 'string') throw new Error("Register key must be a string.");
     const keyDocRef = doc(db, 'poultryRegister', '0-KEY');
     await setDoc(keyDocRef, { registerKey: newKey }, { merge: true });
+    await logAction(`Updated registration key`).catch(console.error);
 };

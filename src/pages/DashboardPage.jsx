@@ -1,4 +1,3 @@
-// src/pages/DashboardPage.jsx
 import React, { useState, useEffect, useRef, useCallback, useMemo } from 'react';
 import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
@@ -12,6 +11,7 @@ import { getAllChannels } from '../firebase/channelService.js';
 import { fetchAllUserAlerts } from '../firebase/fetch_alerts.js';
 import { fetchDeviceStatus } from '../thingspeak/fetch_status.js';
 import { updateDashboardVisuals, createOrClearChart } from '../utils/dashboardMiniChart.js';
+import { logAction } from '../firebase/history.js';
 
 // Determines status badge based on value and thresholds (dynamic or default).
 const getStatus = (value, type, alertThresholds = {}) => {
@@ -458,7 +458,7 @@ const DashboardPage = () => {
 
   const handleConfirmAcknowledge = async (actionsTaken) => {
     if (!alertToAcknowledge) return;
-    const { branchName, firestoreId, originalAlert } = alertToAcknowledge;
+    const { branchName, firestoreId, channelName, originalAlert } = alertToAcknowledge;
 
     if (!branchName || !firestoreId || !originalAlert) {
       console.error("Invalid alert object for acknowledgment:", alertToAcknowledge);
@@ -494,6 +494,13 @@ const DashboardPage = () => {
           throw new Error("Alert not found or already acknowledged.");
         }
       });
+      
+      const actionsString = Array.isArray(actionsTaken) && actionsTaken.length > 0 
+        ? actionsTaken.join(', ') 
+        : 'None specified';
+      
+      await logAction(`Acknowledged alert ("${originalAlert.message}") for house "${channelName}" in branch "${branchName}". Actions taken: ${actionsString}`, 'Update').catch(console.error);
+      
       setToastInfo({ show: true, message: "Alert acknowledged!", type: "success" });
       await loadAlerts(channels);
     } catch (e) {

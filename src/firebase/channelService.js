@@ -1,9 +1,9 @@
-// src/firebase/channelService.js
 import { db } from './firebaseConfig';
 import {
   collection, getDocs, doc, setDoc, updateDoc, getDoc,
   Timestamp, deleteField, writeBatch, query, where
 } from 'firebase/firestore';
+import { logAction } from './history';
 
 // Retrieves all poultry houses from all branches.
 export const getAllChannels = async () => {
@@ -73,6 +73,7 @@ export const createBranch = async (branchName, branchKey) => {
   const docSnap = await getDoc(branchDocRef);
   if (docSnap.exists()) throw new Error(`Branch "${branchName}" already exists.`);
   await setDoc(branchDocRef, { key: branchKey, houses: { withSensor: {}, withoutSensor: {} }, workers: [] });
+  await logAction(`Created branch "${branchName}"`).catch(console.error);
 };
 
 // Updates a branch's name and/or key, handling document ID changes and worker references.
@@ -85,6 +86,7 @@ export const updateBranch = async (oldBranchName, newBranchName, newBranchKey) =
 
   if (oldBranchName === newBranchName) {
     await updateDoc(oldBranchRef, { key: newBranchKey });
+    await logAction(`Updated key for branch "${newBranchName}"`).catch(console.error);
     return;
   }
   
@@ -104,6 +106,7 @@ export const updateBranch = async (oldBranchName, newBranchName, newBranchKey) =
 
   batch.delete(oldBranchRef);
   await batch.commit();
+  await logAction(`Updated branch "${oldBranchName}" to "${newBranchName}"`).catch(console.error);
 };
 
 // Deletes a branch after ensuring it's empty and cleans up worker references.
@@ -133,6 +136,7 @@ export const deleteBranch = async (branchName) => {
 
   batch.delete(branchRef);
   await batch.commit();
+  await logAction(`Deleted branch "${branchName}"`).catch(console.error);
 };
 
 // Saves a new house without a sensor to Firestore.
@@ -144,6 +148,7 @@ export const saveNewChannelWithoutSensorToFirestore = async (channelName, branch
     throw new Error(`A poultry house named "${channelName}" already exists in this branch.`);
   }
   await setDoc(branchDocRef, { houses: { withoutSensor: { [channelName]: { dateAdded: Timestamp.now() } } } }, { merge: true });
+  await logAction(`Added house "${channelName}" (without sensor) to branch "${branchName}"`).catch(console.error);
 };
 
 // Saves a new channel with a sensor and thresholds to Firestore.
@@ -165,6 +170,7 @@ export const saveNewChannelWithSensorToFirestore = async (thingSpeakResponse, br
     throw new Error(`A poultry house named "${channelName}" already exists in this branch.`);
   }
   await setDoc(branchDocRef, { houses: { withSensor: { [channelName]: dataToSave } } }, { merge: true });
+  await logAction(`Added house "${channelName}" (with sensor) to branch "${branchName}"`).catch(console.error);
 };
 
 // Upgrades a house from 'withoutSensor' to 'withSensor', creating a ThingSpeak channel.
@@ -190,6 +196,7 @@ export const addSensorToExistingHouse = async (channel, adminUserApiKey, alertTh
   batch.update(branchDocRef, { [`houses.withSensor.${channel.firestoreId}`]: newSensorData });
   batch.update(branchDocRef, { [`houses.withoutSensor.${channel.firestoreId}`]: deleteField() });
   await batch.commit();
+  await logAction(`Added sensor to house "${channel.firestoreId}" in branch "${channel.branchName}"`).catch(console.error);
 };
 
 // Removes sensor from a house, deleting ThingSpeak channel and moving it to 'withoutSensor'.
@@ -204,6 +211,7 @@ export const removeSensorFromHouse = async (channel, adminUserApiKey) => {
   batch.update(branchDocRef, { [`houses.withoutSensor.${channel.firestoreId}`]: { dateAdded: channel["Date Created"] } });
   batch.update(branchDocRef, { [`houses.withSensor.${channel.firestoreId}`]: deleteField() });
   await batch.commit();
+  await logAction(`Removed sensor from house "${channel.firestoreId}" in branch "${channel.branchName}"`).catch(console.error);
 };
 
 // Updates a channel's name and/or thresholds in Firestore.
@@ -233,6 +241,7 @@ export const updateChannelInFirestore = async (branchName, oldName, newName, has
     batch.update(docRef, { [`houses.${sensorType}.${oldName}`]: deleteField() });
   }
   await batch.commit();
+  await logAction(`Updated house "${oldName}" to "${newName}" in branch "${branchName}"`).catch(console.error);
 };
 
 // Clears all sensor data feeds from ThingSpeak and all alerts from Firestore.
@@ -248,6 +257,7 @@ export const clearChannelDataInThingSpeakAndFirestore = async (channel, adminUse
     [`houses.withSensor.${channel.firestoreId}.alerts`]: [],
     [`houses.withSensor.${channel.firestoreId}.annualReport`]: {}
   });
+  await logAction(`Cleared data for house "${channel.firestoreId}" in branch "${channel.branchName}"`).catch(console.error);
 };
 
 // Deletes a channel from both Firestore and ThingSpeak.
@@ -265,4 +275,5 @@ export const deleteChannelFromFirestoreAndThingSpeak = async (branchName, channe
     await deleteThingSpeakChannel(adminUserApiKey, channelData.databaseID).catch(e => console.error(e.message));
   }
   await updateDoc(branchDocRef, { [`houses.${sensorType}.${channelName}`]: deleteField() });
+  await logAction(`Deleted house "${channelName}" from branch "${branchName}"`).catch(console.error);
 };

@@ -1,4 +1,3 @@
-// src/firebase/authentication.js
 import {
   getAuth,
   EmailAuthProvider,
@@ -7,6 +6,7 @@ import {
 } from 'firebase/auth';
 import { functions } from './firebaseConfig';
 import { httpsCallable } from 'firebase/functions';
+import { logAction } from './history';
 
 // This module provides functions for managing the currently authenticated user's credentials,
 // such as changing their password or email address securely.
@@ -34,6 +34,7 @@ export const changeUserPassword = async (currentPassword, newPassword) => {
     // If re-authentication is successful, update the password
     await updatePassword(user, newPassword);
     console.log(`Password changed for user: ${user.email}`);
+    await logAction(`Changed user password`).catch(console.error);
   } catch (error) {
     console.error(`Password change failed for user ${user.email}:`, error);
     // Provide a more user-friendly error message
@@ -104,6 +105,9 @@ export const changeUserEmail = async (currentPassword, newEmail, verificationCod
       throw new Error(result.data?.message || "Cloud function failed to update email.");
     }
     console.log(`Cloud function successfully changed email for UID ${user.uid} to ${newEmail}`);
+    
+    await logAction(`Changed user email to ${newEmail}`).catch(console.error);
+
     // The client's auth state will update automatically after a token refresh.
     return { success: true, message: result.data.message || "Email updated successfully. You might be asked to log in again with your new email." };
   } catch (error) {
