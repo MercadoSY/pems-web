@@ -49,10 +49,20 @@ const AllAlertsModal = ({ show, onHide, alerts, onAcknowledge, onAnalyze, getBad
                 <div className="flex-grow-1" style={{ minWidth: 0 }}>
                     <small className="text-muted d-block text-truncate" title={`${alert.branchName} / ${alert.channelName} • ${alert.time}`}>{alert.branchName} / <u className="text-muted">{alert.channelName}</u> • {alert.time}</small>
                     <span className={`mb-0 d-block text-truncate ${styles.alertMessage}`}>{alert.message}</span>
-                    {isAcknowledged && alert.actionTaken && alert.actionTaken.length > 0 && (
+                    {isAcknowledged && (
                         <div className={`${styles.actionTakenContainer} mt-1`}>
-                            <i className="bi bi-tools me-1"></i>
-                            <small className="text-muted text-truncate" title={`Actions: ${alert.actionTaken.join(', ')}`}>{alert.actionTaken.join(', ')}</small>
+                            {alert.acknowledgedBy && (
+                                <div className="d-flex align-items-center me-3" title={`Acknowledged by: ${alert.acknowledgedBy}`}>
+                                    <i className="bi bi-person-check-fill text-success me-1"></i>
+                                    <small className="text-muted">{alert.acknowledgedBy}</small>
+                                </div>
+                            )}
+                            {alert.actionTaken && alert.actionTaken.length > 0 && (
+                                <div className="d-flex align-items-center" title={`Actions: ${alert.actionTaken.join(', ')}`}>
+                                    <i className="bi bi-tools text-secondary me-1"></i>
+                                    <small className="text-muted text-truncate">{alert.actionTaken.join(', ')}</small>
+                                </div>
+                            )}
                         </div>
                     )}
                 </div>

@@ -3,9 +3,9 @@ import { useNavigate } from 'react-router-dom';
 import Sidebar from '../components/layout/Sidebar';
 import AllAlertsModal from '../components/modals/AllAlertsModals';
 import AcknowledgeAlertModal from '../components/modals/AcknowledgeAlertModal';
-import AlertAnalysisModal from '../components/modals/AlertAnalysisModal'; // Added
+import AlertAnalysisModal from '../components/modals/AlertAnalysisModal';
 import styles from '../styles/DashboardPage.module.css';
-import { db } from '../firebase/firebaseConfig';
+import { db, auth } from '../firebase/firebaseConfig';
 import { doc, runTransaction, collection, getDocs } from 'firebase/firestore';
 import { getAllChannels } from '../firebase/channelService.js';
 import { fetchAllUserAlerts } from '../firebase/fetch_alerts.js';
@@ -465,6 +465,9 @@ const DashboardPage = () => {
       setToastInfo({ show: true, message: "Could not acknowledge: invalid data.", type: "danger" });
       return;
     }
+    
+    const user = auth.currentUser;
+    const acknowledgedBy = user?.displayName || user?.email || user?.phoneNumber || 'Unknown User';
     const branchDocRef = doc(db, "poultryHouses", branchName);
 
     try {
@@ -482,7 +485,7 @@ const DashboardPage = () => {
               alert.message === originalAlert.message &&
               !alert.isAcknowledge) {
             alertFound = true;
-            return { ...alert, isAcknowledge: true, actionTaken: actionsTaken };
+            return { ...alert, isAcknowledge: true, actionTaken: actionsTaken, acknowledgedBy };
           }
           return alert;
         });

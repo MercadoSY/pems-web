@@ -58,12 +58,13 @@
     font-size: 0.8rem;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .actionTakenContainer i {
     font-size: 0.9rem;
 }
-
 
 @media (max-width: 768px) {
   .listGroupItem {
