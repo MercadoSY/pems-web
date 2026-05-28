@@ -174,7 +174,7 @@ background-color: white;
 }
 
 .statCard .text-muted {
-  color: #495057 !important; /* Increased contrast for subtitles on colored backgrounds */
+  color: #495057 !important; 
 }
 
 .readingSubtitle {
@@ -268,7 +268,6 @@ color: #333;
   border-color: rgba(0, 0, 0, 0.15);
 }
 
-
 .alertsTable {
   vertical-align: middle;
   font-size: 0.9rem;
@@ -290,6 +289,66 @@ color: #333;
 .alertTimeBadge {
   padding: 0.5em 0.8em;
   font-size: 0.75rem;
+}
+
+/* Expandable nested table styling for Dashboard */
+.toggleOlderBtn {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #495057;
+  background-color: #f8f9fa;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+  padding: 0.15rem 0.5rem;
+}
+
+.toggleOlderBtn:hover {
+  background-color: #e2e6ea;
+}
+
+.expandedParentRow {
+  background-color: #fdfdfe !important;
+  border-bottom-color: transparent !important;
+}
+
+.subAlertsRow {
+  background-color: #f8f9fa;
+}
+
+.subAlertsWrapper {
+  padding: 0.75rem 1.5rem;
+  border-bottom: 1px solid #dee2e6;
+  text-align: left;
+}
+
+.subAlertsHeader {
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #6c757d;
+  margin-bottom: 0.5rem;
+}
+
+.subAlertsList {
+  display: flex;
+  flex-direction: column;
+  gap: 0.25rem;
+}
+
+.subAlertItem {
+  font-size: 0.85rem;
+  padding: 0.25rem 0;
+  display: flex;
+  align-items: center;
+  border-top: 1px dashed #dee2e6;
+}
+
+.subAlertItem:first-child {
+  border-top: none;
+}
+
+.subAlertTime {
+  font-size: 0.7rem;
+  padding: 0.35em 0.5em;
 }
 
 @media (max-width: 768px) {

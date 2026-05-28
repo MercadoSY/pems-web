@@ -65,6 +65,8 @@ const AcknowledgeAlertModal = ({ show, onHide, alert, onSubmit }) => {
     }
   };
 
+  const olderAlertsCount = alert?.olderAlerts?.length || 0;
+
   return (
     <div className="modal fade" id="acknowledgeAlertModal" tabIndex="-1" aria-labelledby="acknowledgeAlertModalLabel" aria-hidden="true" ref={modalRef}>
       <div className="modal-dialog modal-dialog-centered">
@@ -81,6 +83,14 @@ const AcknowledgeAlertModal = ({ show, onHide, alert, onSubmit }) => {
                     <p className="mb-1"><strong>Poultry House:</strong> {alert.channelName}</p>
                     <p className="mb-2"><strong>Message:</strong> <span className="fw-bold">{alert.message}</span></p>
                 </div>
+                
+                {olderAlertsCount > 0 && (
+                  <div className="alert alert-warning py-2 mt-3 mb-0 d-flex align-items-center" style={{ fontSize: '0.85rem' }}>
+                    <i className="bi bi-info-circle-fill me-2 fs-5"></i>
+                    <span>Acknowledging this alert will automatically close <strong>{olderAlertsCount} older pending <span className="text-capitalize">{alert.type}</span> alert(s)</strong> for this house.</span>
+                  </div>
+                )}
+                
                 <hr />
                 <p>Select all actions taken to resolve this issue:</p>
                 <div className={styles.actionsContainer}>

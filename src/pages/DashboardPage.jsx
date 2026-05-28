@@ -20,14 +20,12 @@ const getStatus = (value, type, alertThresholds = {}) => {
   if (type === 'ammonia') {
     const dangerHigh = parseFloat(alertThresholds?.ammoniaHigh);
     
-    // Use dynamic thresholds if available, otherwise fallback to defaults
     if (!isNaN(dangerHigh)) {
-      const warnHigh = dangerHigh * 0.8; // Warning starts at 80% of danger level
+      const warnHigh = dangerHigh * 0.8; 
       if (value >= dangerHigh) return { badgeClass: 'bg-danger', text: 'Danger' };
       if (value >= warnHigh) return { badgeClass: 'bg-warning text-dark', text: 'Warning' };
       return { badgeClass: 'bg-success', text: 'Safe' };
     } else {
-      // Fallback to hardcoded defaults
       if (value >= 25) return { badgeClass: 'bg-danger', text: 'Danger' };
       if (value >= 10) return { badgeClass: 'bg-warning text-dark', text: 'Warning' };
       return { badgeClass: 'bg-success', text: 'Safe' };
@@ -38,9 +36,8 @@ const getStatus = (value, type, alertThresholds = {}) => {
     const dangerHigh = parseFloat(alertThresholds?.tempHigh);
     const dangerLow = parseFloat(alertThresholds?.tempLow);
     
-    // Use dynamic thresholds if available, otherwise fallback to defaults
     if (!isNaN(dangerHigh) && !isNaN(dangerLow)) {
-      const tempWarningBuffer = 2.0; // 2 degrees Celsius buffer for warning
+      const tempWarningBuffer = 2.0; 
       const warnHigh = dangerHigh - tempWarningBuffer;
       const warnLow = dangerLow + tempWarningBuffer;
 
@@ -48,20 +45,17 @@ const getStatus = (value, type, alertThresholds = {}) => {
       if (value > warnHigh || value < warnLow) return { badgeClass: 'bg-warning text-dark', text: 'Warning' };
       return { badgeClass: 'bg-success', text: 'Safe' };
     } else {
-      // Fallback to hardcoded defaults
       if (value >= 28 || value <= 20) return { badgeClass: 'bg-danger', text: 'Danger' };
       if (value > 26 || value < 22) return { badgeClass: 'bg-warning text-dark', text: 'Warning' };
       return { badgeClass: 'bg-success', text: 'Safe' };
     }
   }
 
-  // Default return for unknown type
   return { badgeClass: 'bg-secondary', text: 'N/A' };
 };
 
 const tempThresholds = { danger_high: 28, danger_low: 20, warn_high: 26, warn_low: 22 };
 
-// Renders the main dashboard for real-time monitoring.
 const DashboardPage = () => {
   const navigate = useNavigate();
   const [isSidebarExpanded, setIsSidebarExpanded] = useState(true);
@@ -135,11 +129,7 @@ const DashboardPage = () => {
 
     if (thresholds && Object.keys(thresholds).length > 0) {
       const ammoniaHigh = parseFloat(thresholds.ammoniaHigh);
-      setAmmoniaRangeText(
-        !isNaN(ammoniaHigh) 
-        ? `Normal Range: 0-${ammoniaHigh}ppm` 
-        : 'Normal Range: 0-20ppm'
-      );
+      setAmmoniaRangeText(!isNaN(ammoniaHigh) ? `Normal Range: 0-${ammoniaHigh}ppm` : 'Normal Range: 0-20ppm');
 
       const tempLow = parseFloat(thresholds.tempLow);
       const tempHigh = parseFloat(thresholds.tempHigh);
@@ -181,8 +171,22 @@ const DashboardPage = () => {
   const loadAlerts = useCallback(async (allChannelsData) => {
     const freshAlerts = await fetchAllUserAlerts(allChannelsData);
     setAllUserAlerts(freshAlerts);
+    
+    // Group active alerts so we only show the newest one per type per house in the dashboard preview
     const unacknowledged = freshAlerts.filter(a => !a.isAcknowledge);
-    setRecentAlerts(unacknowledged.slice(0, 5));
+    const latestPerHouseAndTypeMap = new Map();
+    
+    unacknowledged.forEach(alert => {
+      const key = `${alert.branchName}-${alert.firestoreId}-${alert.type}`;
+      if (!latestPerHouseAndTypeMap.has(key)) {
+        latestPerHouseAndTypeMap.set(key, { ...alert, olderAlerts: [] });
+      } else {
+        latestPerHouseAndTypeMap.get(key).olderAlerts.push(alert);
+      }
+    });
+
+    const latestUnacknowledged = Array.from(latestPerHouseAndTypeMap.values());
+    setRecentAlerts(latestUnacknowledged.slice(0, 5));
   }, []);
 
   const updateDashboardCards = useCallback(async (channelConfig) => {
@@ -222,10 +226,10 @@ const DashboardPage = () => {
           setAmmoniaStatus(getStatus(ammoniaValue, 'ammonia', dynamicThresholds));
           setTempStatus(getStatus(tempValue, 'temperature', dynamicThresholds));
         } else {
-          resetValues(); // Data is older than 30 seconds
+          resetValues(); 
         }
       } else {
-        resetValues(); // No data found
+        resetValues(); 
       }
     } catch (error) {
       console.error("Error fetching latest readings for dashboard cards:", error);
@@ -295,7 +299,6 @@ const DashboardPage = () => {
     }
   }, [selectedBranch, channels, resetDashboardVisuals]);
 
-  // This effect finds the correct channel configuration when the user selection changes.
   useEffect(() => {
     if (!selectedChannelId || !selectedBranch) {
       setSelectedChannelDetails(null);
@@ -311,12 +314,8 @@ const DashboardPage = () => {
     }
   }, [selectedChannelId, selectedBranch, channels, resetDashboardVisuals]);
 
-  // This effect handles all data fetching for the selected channel.
-  // It runs when the channel changes, on a 15s interval, and when the tab becomes visible.
   useEffect(() => {
-    if (!selectedChannelDetails || !selectedChannelDetails.hasSensor) {
-      return; // Do nothing if no channel is selected or it has no sensor.
-    }
+    if (!selectedChannelDetails || !selectedChannelDetails.hasSensor) return;
 
     const refetchData = async () => {
       setIsDashboardDataLoading(true);
@@ -335,16 +334,14 @@ const DashboardPage = () => {
       setIsDashboardDataLoading(false);
     };
 
-    refetchData(); // Fetch data immediately when the component mounts or channel changes.
+    refetchData();
 
     const handleVisibilityChange = () => {
-      if (document.visibilityState === 'visible') {
-        refetchData();
-      }
+      if (document.visibilityState === 'visible') refetchData();
     };
     
     document.addEventListener('visibilitychange', handleVisibilityChange);
-    const interval = setInterval(refetchData, 15000); // Refresh every 15 seconds.
+    const interval = setInterval(refetchData, 15000); 
 
     return () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
@@ -458,7 +455,7 @@ const DashboardPage = () => {
 
   const handleConfirmAcknowledge = async (actionsTaken) => {
     if (!alertToAcknowledge) return;
-    const { branchName, firestoreId, channelName, originalAlert } = alertToAcknowledge;
+    const { branchName, firestoreId, channelName, originalAlert, type: alertType } = alertToAcknowledge;
 
     if (!branchName || !firestoreId || !originalAlert) {
       console.error("Invalid alert object for acknowledgment:", alertToAcknowledge);
@@ -471,6 +468,7 @@ const DashboardPage = () => {
     const branchDocRef = doc(db, "poultryHouses", branchName);
 
     try {
+      let supersededCount = 0;
       await runTransaction(db, async (transaction) => {
         const branchSnapshot = await transaction.get(branchDocRef);
         if (!branchSnapshot.exists()) throw new Error("Branch document not found!");
@@ -479,13 +477,20 @@ const DashboardPage = () => {
         const alerts = data.houses?.withSensor?.[firestoreId]?.alerts || [];
 
         let alertFound = false;
+        
+        // Loop through alerts and supersede older ones of the SAME type for this house
         const updatedAlerts = alerts.map(alert => {
-          if (alert.timestamp && originalAlert.timestamp &&
-              alert.timestamp.isEqual(originalAlert.timestamp) &&
-              alert.message === originalAlert.message &&
-              !alert.isAcknowledge) {
-            alertFound = true;
-            return { ...alert, isAcknowledge: true, actionTaken: actionsTaken, acknowledgedBy };
+          if (!alert.isAcknowledge) {
+            if (alert.timestamp && originalAlert.timestamp &&
+                alert.timestamp.isEqual(originalAlert.timestamp) &&
+                alert.message === originalAlert.message) {
+              alertFound = true;
+              return { ...alert, isAcknowledge: true, actionTaken: actionsTaken, acknowledgedBy };
+            } else if (alert.type === originalAlert.type || alert.warning === originalAlert.type) {
+              // Older, unacknowledged alert for SAME house & SAME type -> Auto Supersede
+              supersededCount++;
+              return { ...alert, isAcknowledge: true, actionTaken: ["No actions taken"], acknowledgedBy: `${acknowledgedBy} (Auto)` };
+            }
           }
           return alert;
         });
@@ -502,7 +507,12 @@ const DashboardPage = () => {
         ? actionsTaken.join(', ') 
         : 'None specified';
       
-      await logAction(`Acknowledged alert ("${originalAlert.message}") for house "${channelName}" in branch "${branchName}". Actions taken: ${actionsString}`, 'Update').catch(console.error);
+      let historyLog = `Acknowledged ${alertType} alert ("${originalAlert.message}") for house "${channelName}" in branch "${branchName}". Actions taken: ${actionsString}`;
+      if (supersededCount > 0) {
+          historyLog += ` (Automatically superseded ${supersededCount} older ${alertType} alert(s)).`;
+      }
+      
+      await logAction(historyLog, 'Update').catch(console.error);
       
       setToastInfo({ show: true, message: "Alert acknowledged!", type: "success" });
       await loadAlerts(channels);
@@ -514,11 +524,69 @@ const DashboardPage = () => {
     }
   };
   
-  // Formats performance summary values for display.
   const formatSummaryValue = (value, unit, conversionFn = val => val) => {
     if (value === null) return `-- ${unit}`;
     if (typeof value === 'number') return `${conversionFn(value).toFixed(1)} ${unit}`;
-    return value; // Handles 'Error' string
+    return value; 
+  };
+
+  // Dedicated component to render a row with expandable nested alerts
+  const RecentAlertRow = ({ alert }) => {
+    const [expanded, setExpanded] = useState(false);
+    const { iconClass, iconColorClass } = getBadgeDetailsForAlertType(alert.type);
+    const warningType = alert.type?.toLowerCase() === 'both' 
+      ? <>Ammonia &<br />Temperature</> 
+      : <span className="text-capitalize">{alert.type}</span>;
+    const hasOlder = alert.olderAlerts && alert.olderAlerts.length > 0;
+
+    return (
+      <>
+        <tr className={expanded ? styles.expandedParentRow : ''}>
+          <td className="text-nowrap"><span className={`badge bg-danger ${styles.alertTimeBadge}`}>{alert.time}</span></td>
+          <td><div className={`d-flex align-items-center justify-content-center gap-2 ${styles.alertTypeCell}`}><i className={`${iconClass} ${iconColorClass} fs-4`}></i>{warningType}</div></td>
+          <td>{alert.branchName}</td>
+          <td>
+            {alert.channelName}
+            {hasOlder && (
+              <div className="mt-1">
+                <button onClick={() => setExpanded(!expanded)} className={`btn btn-sm ${styles.toggleOlderBtn}`}>
+                    <i className="bi bi-stack me-1"></i>
+                    {alert.olderAlerts.length} Similar Pending <i className={`bi bi-chevron-${expanded ? 'up' : 'down'} ms-1`}></i>
+                </button>
+              </div>
+            )}
+          </td>
+          <td className="fw-bold">{alert.message}</td>
+          <td className="text-nowrap">
+              <button className="btn btn-outline-primary me-2" title={`Analyze Alert: ${alert.message}`} aria-label={`Analyze Alert: ${alert.message}`} onClick={(e) => { e.stopPropagation(); handleOpenAnalysisModal(alert); }}>
+                  <i className="bi bi-clipboard2-data"></i>
+              </button>
+             <button className="btn btn-outline-success" title={`Acknowledge Alert: ${alert.message}`} aria-label={`Acknowledge Alert: ${alert.message}`} onClick={(e) => { e.stopPropagation(); handleOpenAcknowledgeModal(alert); }}>
+              <i className="bi bi-check-circle"></i>
+            </button>
+          </td>
+        </tr>
+        {expanded && hasOlder && (
+          <tr className={styles.subAlertsRow}>
+            <td colSpan="6" className="p-0">
+              <div className={styles.subAlertsWrapper}>
+                <div className={styles.subAlertsHeader}>
+                  <i className="bi bi-arrow-return-right me-2"></i> Older {alert.type} alerts that will be automatically closed:
+                </div>
+                <div className={styles.subAlertsList}>
+                  {alert.olderAlerts.map(oldAlert => (
+                    <div key={oldAlert.id} className={styles.subAlertItem}>
+                      <span className={`badge bg-secondary me-2 ${styles.subAlertTime}`}>{oldAlert.time}</span>
+                      <span className="text-muted">{oldAlert.message}</span>
+                    </div>
+                  ))}
+                </div>
+              </div>
+            </td>
+          </tr>
+        )}
+      </>
+    );
   };
 
   if (isLoading) {
@@ -664,29 +732,7 @@ const DashboardPage = () => {
                         <td colSpan="6" className="text-center text-muted py-3">No active alerts.</td>
                       </tr>
                     ) : (
-                      recentAlerts.map(alert => {
-                        const { iconClass, iconColorClass } = getBadgeDetailsForAlertType(alert.type);
-                        const warningType = alert.type?.toLowerCase() === 'both' 
-                          ? <>Ammonia &<br />Temperature</> 
-                          : <span className="text-capitalize">{alert.type}</span>;
-                        return (
-                          <tr key={alert.id}>
-                            <td className="text-nowrap"><span className={`badge bg-danger ${styles.alertTimeBadge}`}>{alert.time}</span></td>
-                            <td><div className={`d-flex align-items-center justify-content-center gap-2 ${styles.alertTypeCell}`}><i className={`${iconClass} ${iconColorClass} fs-4`}></i>{warningType}</div></td>
-                            <td>{alert.branchName}</td>
-                            <td>{alert.channelName}</td>
-                            <td className="fw-bold">{alert.message}</td>
-                            <td className="text-nowrap">
-                                <button className="btn btn-outline-primary me-2" title={`Analyze Alert: ${alert.message}`} aria-label={`Analyze Alert: ${alert.message}`} onClick={(e) => { e.stopPropagation(); handleOpenAnalysisModal(alert); }}>
-                                    <i className="bi bi-clipboard2-data"></i>
-                                </button>
-                               <button className="btn btn-outline-success" title={`Acknowledge Alert: ${alert.message}`} aria-label={`Acknowledge Alert: ${alert.message}`} onClick={(e) => { e.stopPropagation(); handleOpenAcknowledgeModal(alert); }}>
-                                <i className="bi bi-check-circle"></i>
-                              </button>
-                            </td>
-                          </tr>
-                        );
-                      })
+                      recentAlerts.map(alert => <RecentAlertRow key={alert.id} alert={alert} />)
                     )}
                   </tbody>
                 </table>
