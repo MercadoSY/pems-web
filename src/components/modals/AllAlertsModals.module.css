@@ -1,5 +1,10 @@
 /* src/components/modals/AllAlertsModals.module.css */
 
+.alertItemContainer {
+    display: flex;
+    flex-direction: column;
+}
+
 .listGroupItem {
   padding-left: 0.5rem;
   padding-right: 0.5rem;
@@ -15,11 +20,26 @@
 }
 
 .acknowledgedItem {
-  opacity: 0.7;
+  opacity: 0.8;
 }
 
 .acknowledgedItem:hover {
     opacity: 1;
+}
+
+.supersededItem {
+  opacity: 0.55;
+  background-color: #fcfcfc;
+}
+
+.supersededItem:hover {
+  opacity: 0.8;
+}
+
+.supersededText {
+  color: #856404;
+  font-style: italic;
+  font-weight: 500;
 }
 
 .alertMessage {
@@ -58,12 +78,59 @@
     font-size: 0.8rem;
     display: flex;
     align-items: center;
+    flex-wrap: wrap;
+    gap: 0.5rem;
 }
 
 .actionTakenContainer i {
     font-size: 0.9rem;
 }
 
+/* Expandable Older Alerts styling */
+.toggleOlderBtn {
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: #495057;
+  background-color: #e9ecef;
+  border: 1px solid #dee2e6;
+  border-radius: 12px;
+}
+.toggleOlderBtn:hover {
+  background-color: #dde2e6;
+}
+
+.expandedItem {
+  border-bottom-color: transparent !important;
+}
+
+.subAlertsPanel {
+    background-color: #f8f9fa;
+    border-bottom: 1px solid rgba(0,0,0,.125);
+    padding: 0.5rem 1rem 1rem 4rem; /* indent to match text start */
+}
+
+.subAlertsHeader {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: #6c757d;
+    margin-bottom: 0.5rem;
+}
+
+.subAlertItem {
+    font-size: 0.85rem;
+    padding: 0.25rem 0;
+    display: flex;
+    align-items: center;
+    border-top: 1px dashed #dee2e6;
+}
+.subAlertItem:first-of-type {
+    border-top: none;
+}
+
+.subAlertTime {
+    font-size: 0.7rem;
+    padding: 0.35em 0.5em;
+}
 
 @media (max-width: 768px) {
   .listGroupItem {
@@ -75,5 +142,9 @@
   .alertMessage {
     font-size: 0.875rem;
     line-height: 1.4;
+  }
+  
+  .subAlertsPanel {
+      padding-left: 1.5rem;
   }
 }

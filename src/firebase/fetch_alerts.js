@@ -17,6 +17,7 @@ const formatAlertObject = (alertDataFromFirestore, branchName, firestoreId, chan
         message: alertDataFromFirestore.message,
         isAcknowledge: alertDataFromFirestore.isAcknowledge ?? false,
         actionTaken: alertDataFromFirestore.actionTaken || [],
+        acknowledgedBy: alertDataFromFirestore.acknowledgedBy || null,
     };
 };
 
